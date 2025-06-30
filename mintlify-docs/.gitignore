@@ -1,0 +1,8 @@
+# Auto-generated API documentation files
+api-reference/
+!api-reference/.gitkeep
+
+# Mintlify generated files
+.next/
+node_modules/
+*.log

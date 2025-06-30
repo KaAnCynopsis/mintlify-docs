@@ -1,0 +1,248 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "Athena API Documentation",
+  "theme": "mint",
+  "favicon": "/favicon.ico",
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#0D9373"
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Getting Started",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": ["introduction"]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Ageing",
+            "pages": [
+              "api-reference/ageing/list-case-ageing-distribution",
+              "api-reference/ageing/retrieve-case-ageing-data-for-a-specific-user"
+            ]
+          },
+          {
+            "group": "App Config",
+            "pages": [
+              "api-reference/app-config/get-app-config",
+              "api-reference/app-config/get-metabase-analytics-url"
+            ]
+          },
+          {
+            "group": "User",
+            "pages": [
+              "api-reference/user/list-users-ordered-by-email",
+              "api-reference/user/retrieve-a-single-user-by-id",
+              "api-reference/user/login",
+              "api-reference/user/logout",
+              "api-reference/user/list-users",
+              "api-reference/user/create-user",
+              "api-reference/user/retrieve-user",
+              "api-reference/user/delete-user",
+              "api-reference/user/update-user"
+            ]
+          },
+          {
+            "group": "Blacklist",
+            "pages": [
+              "api-reference/blacklist/list-all-blacklist-records",
+              "api-reference/blacklist/create-a-blacklist-record",
+              "api-reference/blacklist/retrieve-a-blacklist-record",
+              "api-reference/blacklist/deactivate-a-blacklist-record",
+              "api-reference/blacklist/update-a-blacklist-record"
+            ]
+          },
+          {
+            "group": "Bucket Content",
+            "pages": [
+              "api-reference/bucket-content/list-all-transaction-in-buckets",
+              "api-reference/bucket-content/insert-a-transaction-into-a-bucket"
+            ]
+          },
+          {
+            "group": "Buckets",
+            "pages": [
+              "api-reference/buckets/list-all-buckets",
+              "api-reference/buckets/create-a-bucket",
+              "api-reference/buckets/retrieve-a-specific-bucket",
+              "api-reference/buckets/delete-a-bucket",
+              "api-reference/buckets/update-a-bucket",
+              "api-reference/buckets/export-transactions-to-csv-for-a-bucket"
+            ]
+          },
+          {
+            "group": "Case",
+            "pages": [
+              "api-reference/case/list-all-cases",
+              "api-reference/case/retrieve-a-specific-case",
+              "api-reference/case/delete-a-specific-case",
+              "api-reference/case/update-a-specific-case",
+              "api-reference/case/update-alert-risk-rating-for-a-case",
+              "api-reference/case/approve-a-case",
+              "api-reference/case/assign-a-case-to-a-checker",
+              "api-reference/case/assign-a-case-to-a-maker",
+              "api-reference/case/delete-document-from-a-case",
+              "api-reference/case/delete-findings-from-a-case",
+              "api-reference/case/add-document-to-a-case",
+              "api-reference/case/add-findings-to-a-case",
+              "api-reference/case/reopen-a-case",
+              "api-reference/case/add-report-code-to-a-case",
+              "api-reference/case/add-report-indicator-to-a-case",
+              "api-reference/case/get-active-cases",
+              "api-reference/case/get-active-cases-statistics",
+              "api-reference/case/get-cases-by-assignee",
+              "api-reference/case/get-cases-by-bucket",
+              "api-reference/case/bulk-assign-cases",
+              "api-reference/case/get-case-status-options",
+              "api-reference/case/get-closed-cases",
+              "api-reference/case/export-cases-to-csv",
+              "api-reference/case/get-inactive-cases",
+              "api-reference/case/get-cases-by-priority",
+              "api-reference/case/get-cases-by-rule",
+              "api-reference/case/get-cases-by-status",
+              "api-reference/case/get-cases-timeline",
+              "api-reference/case/get-violations-statistics"
+            ]
+          },
+          {
+            "group": "Reports",
+            "pages": [
+              "api-reference/cases/get-apicases-generate_case_report",
+              "api-reference/cases/get-apicases-transactions",
+              "api-reference/subjects/get-apisubjects-generate-subject-report"
+            ]
+          },
+          {
+            "group": "Currency",
+            "pages": [
+              "api-reference/currency/retrieve-a-list-of-currencies",
+              "api-reference/currency/retrieve-a-specific-currency",
+              "api-reference/currency/activatedeactivate-a-currency"
+            ]
+          },
+          {
+            "group": "Group",
+            "pages": [
+              "api-reference/group/list-groups",
+              "api-reference/group/create-group",
+              "api-reference/group/retrieve-group",
+              "api-reference/group/delete-group",
+              "api-reference/group/update-group"
+            ]
+          },
+          {
+            "group": "Permission",
+            "pages": [
+              "api-reference/permission/list-all-permissions",
+              "api-reference/permission/retrieve-a-single-permission-by-id"
+            ]
+          },
+          {
+            "group": "Risk Assessment",
+            "pages": [
+              "api-reference/risk-assessment/retrieve-a-list-of-risk-assessments",
+              "api-reference/risk-assessment/retrieve-a-specific-risk-assessment"
+            ]
+          },
+          {
+            "group": "RuleAlert",
+            "pages": [
+              "api-reference/rulealert/list-all-rulealert-records",
+              "api-reference/rulealert/retrieve-a-rulealert-record",
+              "api-reference/rulealert/update-a-rulealert-record"
+            ]
+          },
+          {
+            "group": "Rule Detail",
+            "pages": [
+              "api-reference/rule-detail/list-all-rule-information",
+              "api-reference/rule-detail/retrieve-a-rule-information",
+              "api-reference/rule-detail/update-a-rule-information-record"
+            ]
+          },
+          {
+            "group": "Profile Info",
+            "pages": [
+              "api-reference/profile-info/get-profile-information"
+            ]
+          },
+          {
+            "group": "Subjects",
+            "pages": [
+              "api-reference/subjects/list-all-subjects",
+              "api-reference/subjects/create-a-subject",
+              "api-reference/subjects/retrieve-a-specific-subject",
+              "api-reference/subjects/update-a-subject",
+              "api-reference/subjects/export-subjects-to-csv",
+              "api-reference/subjects/get-risk-assessment-report",
+              "api-reference/subjects/upload-subjects"
+            ]
+          },
+          {
+            "group": "Transactions",
+            "pages": [
+              "api-reference/transactions/list-all-transactions",
+              "api-reference/transactions/create-a-transaction",
+              "api-reference/transactions/retrieve-a-specific-transaction",
+              "api-reference/transactions/get-transactions-by-country",
+              "api-reference/transactions/get-summary-stats",
+              "api-reference/transactions/get-transactions-timeline",
+              "api-reference/transactions/upload-transactions"
+            ]
+          },
+          {
+            "group": "Whitelist",
+            "pages": [
+              "api-reference/whitelist/list-all-whitelist-records",
+              "api-reference/whitelist/create-a-whitelist-record",
+              "api-reference/whitelist/retrieve-a-whitelist-record",
+              "api-reference/whitelist/delete-a-whitelist-record",
+              "api-reference/whitelist/update-a-whitelist-record"
+            ]
+          },
+          {
+            "group": "Health Check",
+            "pages": ["api-reference/health-check/simple-health-check"]
+          },
+          {
+            "group": "Authentication",
+            "pages": ["api-reference/authentication/simple-authentication-check"]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.png",
+    "dark": "/logo/dark.png"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:support@athena.com"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Cynopsis Solutions",
+      "href": "https://www.cynopsis-solutions.com/"
+    }
+  },
+  "footer": {
+    "socials": {
+      "facebook": "https://www.facebook.com/cynopsis.co",
+      "github": "https://github.com/Cynopsis",
+      "linkedin": "https://linkedin.com/company/cynopsis-solutions",
+      "instagram": "https://www.instagram.com/cynopsis.co/"
+    }
+  }
+}
