@@ -1,12 +1,12 @@
 {
-    "docsPath": "mintlify-docs",
-    "api": [
+  "docsPath": "mintlify-docs",
+  "api": [
     {
-    "openapi": "openapi/openapi.json",
-    "route": "/api/athena"
+      "openapi": "openapi/openapi.json",
+      "route": "/api/athena"
     }
-    ],
-    "navigation": [
+  ],
+  "navigation": [
     {
       "section": "Athena API",
       "pages": [
@@ -15,7 +15,7 @@
           "route": "/api/athena"
         }
       ]
-    }
+    },
     {
       "section": "Docs",
       "pages": [
