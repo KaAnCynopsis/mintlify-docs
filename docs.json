@@ -8,6 +8,16 @@
     "light": "#07C983",
     "dark": "#0D9373"
   },
+  "api": [
+    {
+      "openapi": "openapi/openapi.json",
+      "route": "/api/athena"
+    },
+    {
+      "openapi": "openapi/openapi.json",
+      "route": "/api/artemis"
+    }
+  ],
   "navigation": {
     "tabs": [
       {
