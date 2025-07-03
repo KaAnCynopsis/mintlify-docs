@@ -1,0 +1,4931 @@
+openapi: 3.0.3
+info:
+  title: Athena API
+  version: v3
+  description: "ATHENA is an advanced real-time transaction monitoring solution designed\
+    \ to detect and prevent money laundering, fraud, and terrorism financing. Powered\
+    \ by proprietary AML rules, ATHENA analyzes transactions in real time, providing\
+    \ clear, intuitive visual insights to streamline compliance processes.\n    \n\
+    \    ✅ Real-Time Monitoring – Instantly analyzes transaction data to detect anomalies\
+    \ and potential compliance risks.\n    ✅ Visualized Insights – Converts complex\
+    \ data into easy-to-understand charts, aiding faster decision-making.\n    ✅ Seamless\
+    \ Integration – Easily integrates with existing financial and compliance systems.\n\
+    \    \n    Ideal for financial institutions, fintech companies, and regulated\
+    \ businesses, ATHENA enhances risk management and ensures regulatory compliance\
+    \ with ease."
+  contact:
+    email: tech@cynopsis.co
+paths:
+  /api/ageing:
+    get:
+      operationId: caseageing_list
+      description: Retrieve case ageing distribution across all cases.
+      summary: List case ageing distribution
+      tags:
+      - Ageing
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CaseAgeing'
+          description: ''
+  /api/ageing/{id}:
+    get:
+      operationId: caseageing_retrieve
+      description: Fetch ageing distribution of cases assigned to a specific user.
+      summary: Retrieve case ageing data for a specific user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: User ID
+        required: true
+      tags:
+      - Ageing
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseAgeing'
+          description: ''
+  /api/appconfig/{key}:
+    get:
+      operationId: appconfig_retrieve
+      description: This endpoint returns the value of the app config key.
+      summary: Get App Config
+      parameters:
+      - in: path
+        name: key
+        schema:
+          type: string
+        required: true
+      tags:
+      - App Config
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppConfig'
+          description: ''
+  /api/appconfig/analytics:
+    get:
+      operationId: appconfig_analytics
+      description: This endpoint returns the Metabase analytics URL for the dashboard
+        ID configured in the database. The URL is valid for 1 hour.
+      summary: Get Metabase analytics URL
+      tags:
+      - App Config
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetabaseUrl'
+          description: ''
+  /api/assignees:
+    get:
+      operationId: userlist_list
+      summary: List users ordered by email
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - User
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserListList'
+          description: ''
+  /api/assignees/{id}:
+    get:
+      operationId: userlist_retrieve
+      summary: Retrieve a single user by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - User
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserList'
+          description: ''
+  /api/blacklist:
+    get:
+      operationId: blacklist_list
+      summary: List all Blacklist records
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: name
+        schema:
+          type: string
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: reference_id
+        schema:
+          type: string
+      tags:
+      - Blacklist
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBlacklistList'
+          description: ''
+    post:
+      operationId: blacklist_create
+      description: A blacklist record is created with the name of the subject and
+        the reference_id, We check for a whitelist record with the blacklist name
+        before adding to blacklist
+      summary: Create a Blacklist record
+      tags:
+      - Blacklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Blacklist name.
+                reference_id:
+                  type: string
+                  description: Reference ID.
+                list_name:
+                  type: string
+                  description: List name.
+                  enum:
+                  - HIGH RISK
+                  - RESTRICTED
+              required:
+              - name
+              - reference_id
+              - list_name
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blacklist'
+          description: ''
+  /api/blacklist/{id}:
+    get:
+      operationId: blacklist_retrieve
+      summary: Retrieve a Blacklist record
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this blacklist.
+        required: true
+      tags:
+      - Blacklist
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blacklist'
+          description: ''
+    patch:
+      operationId: blacklist_partial_update
+      summary: Update a Blacklist record
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this blacklist.
+        required: true
+      tags:
+      - Blacklist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Blacklist name.
+                reference_id:
+                  type: string
+                  description: Reference ID.
+                list_name:
+                  type: string
+                  description: List name.
+                  enum:
+                  - HIGH RISK
+                  - RESTRICTED
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blacklist'
+          description: ''
+    delete:
+      operationId: blacklist_destroy
+      summary: Deactivate a Blacklist record
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this blacklist.
+        required: true
+      tags:
+      - Blacklist
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+                description: Unspecified response body
+          description: ''
+  /api/bucketcontent:
+    get:
+      operationId: transactionbucket_list
+      description: Retrieve a list of all transaction buckets with optional filtering.
+      summary: List all transaction in buckets
+      parameters:
+      - in: query
+        name: bucket_id
+        schema:
+          type: integer
+        description: Filter by bucket ID
+      - in: query
+        name: client_transaction_id
+        schema:
+          type: string
+        description: Filter by client transaction ID
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: max_date
+        schema:
+          type: string
+        description: Filter by maximum transaction timestamp
+      - in: query
+        name: min_date
+        schema:
+          type: string
+        description: Filter by minimum transaction timestamp
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - Bucket Content
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTransactionBucketList'
+          description: ''
+    post:
+      operationId: transactionbucket_create
+      summary: Insert a transaction into a bucket
+      tags:
+      - Bucket Content
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                client_transaction_id:
+                  type: string
+                  description: Client transaction ID
+                populate_buckets:
+                  type: array
+                  items:
+                    type: string
+                  description: List of bucket Names to insert the transaction into
+              required:
+              - client_transaction_id
+              - populate_buckets
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+                description: Unspecified response body
+          description: ''
+  /api/buckets:
+    get:
+      operationId: bucket_list
+      summary: List all buckets
+      parameters:
+      - in: query
+        name: active_indicator
+        schema:
+          type: boolean
+      - in: query
+        name: client_transaction_id
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: name
+        schema:
+          type: string
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - Buckets
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?offset=400&limit=100
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?offset=200&limit=100
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      description: Paginated bucket list
+          description: List of buckets retrieved successfully.
+    post:
+      operationId: bucket_create
+      description: Create a new bucket.
+      summary: Create a bucket
+      tags:
+      - Buckets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BucketRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BucketRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BucketRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bucket_rules:
+                    type: array
+                    items:
+                      type: object
+                      description: Rule object
+                    description: List of bucket rules.
+                  rule_id:
+                    type: integer
+                    description: Rule ID.
+                  rule_setting:
+                    type: object
+                    description: Rule settings.
+                  activate_rule:
+                    type: boolean
+                    description: Activate rule.
+                  last_timestamp:
+                    type: string
+                    description: Last timestamp.
+                  modified_by:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                  created_by:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+          description: Bucket created successfully.
+  /api/buckets/{id}:
+    get:
+      operationId: bucket_retrieve
+      description: Retrieve a specific bucket by its ID.
+      summary: Retrieve a specific bucket
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this bucket.
+        required: true
+      tags:
+      - Buckets
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Bucket object
+          description: Bucket retrieved successfully.
+    patch:
+      operationId: bucket_partial_update
+      description: Update a bucket by its ID.
+      summary: Update a bucket
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this bucket.
+        required: true
+      tags:
+      - Buckets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBucketRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBucketRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBucketRequest'
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bucket_rules:
+                    type: array
+                    items:
+                      type: object
+                      description: Rule object
+                    description: List of bucket rules.
+                  rule_id:
+                    type: integer
+                    description: Rule ID.
+                  rule_setting:
+                    type: object
+                    description: Rule settings.
+                  activate_rule:
+                    type: boolean
+                    description: Activate rule.
+                  last_timestamp:
+                    type: string
+                    description: Last timestamp.
+                  modified_by:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                  created_by:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+          description: Bucket updated successfully.
+    delete:
+      operationId: bucket_destroy
+      description: Delete a bucket by its ID, The bucket will be deactivated.
+      summary: Delete a bucket
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this bucket.
+        required: true
+      tags:
+      - Buckets
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Bucket successfully deactivated.
+  /api/buckets/export_csv:
+    get:
+      operationId: bucket_export_csv
+      description: Export transactions to a CSV file for a specific bucket with optional
+        date range filtering, An email will be sent to you, including the CSV file.
+      summary: Export transactions to CSV for a bucket
+      parameters:
+      - in: query
+        name: bucketId
+        schema:
+          type: integer
+        description: Bucket ID.
+        required: true
+      - in: query
+        name: max_date
+        schema:
+          type: string
+        description: Maximum date in format YYYY-MM-DD.
+        required: true
+      - in: query
+        name: min_date
+        schema:
+          type: string
+        description: Minimum date in format YYYY-MM-DD.
+        required: true
+      tags:
+      - Buckets
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description: Success message containing how many transactions
+                      were exported.
+          description: CSV export initiated successfully.
+  /api/cases:
+    get:
+      operationId: case_list
+      description: Retrieve a list of all cases with optional filtering and ordering.
+      summary: List all cases
+      parameters:
+      - in: query
+        name: alert_risk_rating
+        schema:
+          type: string
+      - in: query
+        name: assignee
+        schema:
+          type: string
+      - in: query
+        name: bucket
+        schema:
+          type: string
+      - in: query
+        name: case_status
+        schema:
+          type: string
+      - in: query
+        name: client_subject_id
+        schema:
+          type: string
+      - in: query
+        name: client_transaction_id
+        schema:
+          type: string
+      - in: query
+        name: id
+        schema:
+          type: integer
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: max_date
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: min_date
+        schema:
+          type: string
+          format: date-time
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - in: query
+        name: rule
+        schema:
+          type: string
+      - in: query
+        name: subject_1
+        schema:
+          type: string
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCaseListList'
+          description: ''
+  /api/cases/{id}:
+    get:
+      operationId: case_retrieve
+      summary: Retrieve a specific case
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this case.
+        required: true
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Case object
+          description: Case retrieved successfully.
+    patch:
+      operationId: case_partial_update
+      summary: Update a specific case
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this case.
+        required: true
+      tags:
+      - Case
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCaseRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCaseRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCaseRequest'
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Case'
+          description: ''
+    delete:
+      operationId: case_destroy
+      description: Delete a specific case by its ID. A soft delete is performed.
+      summary: Delete a specific case
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this case.
+        required: true
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description: Success message.
+                  status:
+                    type: integer
+                    description: HTTP status code.
+          description: Case deleted successfully.
+  /api/cases/{id}/alert:
+    patch:
+      operationId: case_alert
+      description: Update the alert risk rating for a specific case.
+      summary: Update alert risk rating for a case
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this case.
+        required: true
+      tags:
+      - Case
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alert_risk_rating:
+                  type: string
+                  enum:
+                  - HIGH
+                  - MEDIUM
+                  - LOW
+                  - Unrated
+              required:
+              - alert_risk_rating
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: Alert risk rating updated successfully.
+          description: ''
+  /api/cases/{id}/approval:
+    patch:
+      operationId: case_approval
+      description: Approve a case.
+      summary: Approve a case
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this case.
+        required: true
+      tags:
+      - Case
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCaseApprovalRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCaseApprovalRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCaseApprovalRequest'
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Case approved successfully.
+  /api/cases/{id}/assign_checker:
+    patch:
+      operationId: case_assign_checker
+      description: Assign a case to a checker.
+      summary: Assign a case to a checker
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this case.
+        required: true
+      tags:
+      - Case
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCaseAssignCheckerRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCaseAssignCheckerRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCaseAssignCheckerRequest'
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description: Success message.
+                  status:
+                    type: integer
+                    description: HTTP status code.
+          description: Case assigned to checker successfully.
+  /api/cases/{id}/assign_maker:
+    patch:
+      operationId: case_assign_maker
+      description: Assign a case to a maker.
+      summary: Assign a case to a maker
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this case.
+        required: true
+      tags:
+      - Case
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCaseAssignCheckerRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCaseAssignCheckerRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCaseAssignCheckerRequest'
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Case assigned to maker successfully.
+  /api/cases/{id}/delete_document:
+    delete:
+      operationId: case_delete_document
+      description: Delete a document from a specific case by its ID.
+      summary: Delete document from a case
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this case.
+        required: true
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: Document deleted successfully.
+          description: ''
+  /api/cases/{id}/delete_findings:
+    delete:
+      operationId: case_delete_findings
+      description: Delete findings from a specific case by its ID.
+      summary: Delete findings from a case
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this case.
+        required: true
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: Findings deleted successfully.
+          description: ''
+  /api/cases/{id}/document:
+    patch:
+      operationId: case_document
+      description: Add a document to a specific case by its ID.
+      summary: Add document to a case
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this case.
+        required: true
+      tags:
+      - Case
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Document name.
+                document:
+                  type: string
+                  format: binary
+                  description: Document file.
+              required:
+              - name
+              - document
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: Document added successfully.
+          description: ''
+  /api/cases/{id}/findings:
+    patch:
+      operationId: case_findings
+      description: Add findings to a specific case by its ID.
+      summary: Add findings to a case
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this case.
+        required: true
+      tags:
+      - Case
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                finding_content:
+                  type: string
+                  description: Finding content.
+              required:
+              - finding_content
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: Findings added successfully.
+          description: ''
+  /api/cases/{id}/generate_case_report:
+    get:
+      operationId: case_generate_case_report
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this case.
+        required: true
+      tags:
+      - cases
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Case'
+          description: ''
+  /api/cases/{id}/reopen:
+    patch:
+      operationId: case_reopen
+      description: Reopen a case.
+      summary: Reopen a case
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this case.
+        required: true
+      tags:
+      - Case
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCaseReopenDataRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCaseReopenDataRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCaseReopenDataRequest'
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Case reopened successfully.
+  /api/cases/{id}/report_code:
+    patch:
+      operationId: case_report_code
+      description: Add a report code to a specific case by its ID.
+      summary: Add report code to a case
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this case.
+        required: true
+      tags:
+      - Case
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                report_code:
+                  type: string
+                  description: Report code.
+              required:
+              - report_code
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Case'
+          description: ''
+  /api/cases/{id}/report_indicator:
+    patch:
+      operationId: case_report_indicator
+      description: Add a report indicator to a specific case by its ID.
+      summary: Add report indicator to a case
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this case.
+        required: true
+      tags:
+      - Case
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                report_indicator:
+                  type: string
+                  description: Report indicator.
+              required:
+              - report_indicator
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Case'
+          description: ''
+  /api/cases/{id}/transactions:
+    get:
+      operationId: cases_transactions_list
+      parameters:
+      - name: cursor
+        required: false
+        in: query
+        description: The pagination cursor value.
+        schema:
+          type: string
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - name: page_limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - cases
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTransactionCaseList'
+          description: ''
+  /api/cases/active:
+    get:
+      operationId: case_active
+      description: Retrieve a list of active cases, A case is considered active if
+        its status is not TRUE_HIT nor FALSE_HIT.
+      summary: Get active cases
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseList'
+          description: ''
+  /api/cases/active_cases:
+    get:
+      operationId: case_active_cases
+      summary: Get active cases statistics
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Active cases statistics
+          description: Active cases retrieved successfully.
+  /api/cases/assignee:
+    get:
+      operationId: case_assignee
+      description: Retrieve statistics for cases grouped by assignee.
+      summary: Get cases by assignee
+      parameters:
+      - in: query
+        name: assignees
+        schema:
+          type: string
+        description: Filter cases by assignee ID(s).
+      - in: query
+        name: buckets
+        schema:
+          type: string
+        description: Filter cases by bucket ID(s).
+      - in: query
+        name: end_date
+        schema:
+          type: string
+        description: End date to filter cases.
+      - in: query
+        name: is_active
+        schema:
+          type: string
+        description: Filter cases by active status.
+      - in: query
+        name: rules
+        schema:
+          type: string
+        description: Filter cases by rule ID(s).
+      - in: query
+        name: start_date
+        schema:
+          type: string
+        description: Start date to filter cases.
+      - in: query
+        name: statuses
+        schema:
+          type: string
+        description: Filter cases by status(es).
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                description: Assignee data
+          description: Cases grouped by assignee retrieved successfully.
+  /api/cases/bucket:
+    get:
+      operationId: case_bucket
+      description: Retrieve statistics for cases grouped by bucket.
+      summary: Get cases by bucket
+      parameters:
+      - in: query
+        name: assignees
+        schema:
+          type: string
+        description: Filter cases by assignee ID(s).
+      - in: query
+        name: buckets
+        schema:
+          type: string
+        description: Filter cases by bucket ID(s).
+      - in: query
+        name: end_date
+        schema:
+          type: string
+        description: End date to filter cases.
+      - in: query
+        name: is_active
+        schema:
+          type: string
+        description: Filter cases by active status.
+      - in: query
+        name: rules
+        schema:
+          type: string
+        description: Filter cases by rule ID(s).
+      - in: query
+        name: start_date
+        schema:
+          type: string
+        description: Start date to filter cases.
+      - in: query
+        name: statuses
+        schema:
+          type: string
+        description: Filter cases by status(es).
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                description: Case bucket data
+          description: Cases grouped by bucket retrieved successfully.
+  /api/cases/bulk_assign:
+    patch:
+      operationId: case_bulk_assign
+      description: Assign multiple cases to a specific assignee.
+      summary: Bulk assign cases
+      tags:
+      - Case
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                case_list:
+                  type: array
+                  items:
+                    type: integer
+                  description: List of case IDs.
+                assignee:
+                  type: integer
+                  description: Assignee user ID.
+              required:
+              - case_list
+              - assignee
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: Cases assigned successfully.
+          description: ''
+  /api/cases/case_status:
+    get:
+      operationId: case_case_status
+      description: Retrieve a list of all case status options, including their key
+        and value.
+      summary: Get case status options
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Case status data
+          description: Case status options retrieved successfully.
+  /api/cases/closed_cases:
+    get:
+      operationId: case_closed_cases
+      description: Retrieve statistics for closed cases, A case is considered closed
+        if it is in either TRUE_HIT or FALSE_HIT status.
+      summary: Get closed cases
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Closed cases statistics
+          description: Closed cases retrieved successfully.
+  /api/cases/export_csv:
+    get:
+      operationId: case_export_csv
+      description: Export cases to a CSV file, A CSV file will be generated and sent
+        to the user's email.
+      summary: Export cases to CSV
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description: Success message.
+                  status:
+                    type: integer
+                    description: HTTP status code.
+          description: CSV export initiated successfully.
+  /api/cases/not_active:
+    get:
+      operationId: case_not_active
+      description: Retrieve a list of inactive cases.
+      summary: Get inactive cases
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseList'
+          description: ''
+  /api/cases/priority:
+    get:
+      operationId: case_priority
+      description: Retrieve statistics for cases grouped by priority.
+      summary: Get cases by priority
+      parameters:
+      - in: query
+        name: assignees
+        schema:
+          type: string
+        description: Filter cases by assignee ID(s).
+      - in: query
+        name: buckets
+        schema:
+          type: string
+        description: Filter cases by bucket ID(s).
+      - in: query
+        name: end_date
+        schema:
+          type: string
+        description: End date to filter cases.
+      - in: query
+        name: is_active
+        schema:
+          type: string
+        description: Filter cases by active status.
+      - in: query
+        name: rules
+        schema:
+          type: string
+        description: Filter cases by rule ID(s).
+      - in: query
+        name: start_date
+        schema:
+          type: string
+        description: Start date to filter cases.
+      - in: query
+        name: statuses
+        schema:
+          type: string
+        description: Filter cases by status(es).
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                description: Priority data
+          description: Cases grouped by priority retrieved successfully.
+  /api/cases/rule:
+    get:
+      operationId: case_rule
+      description: Retrieve statistics for cases grouped by rule.
+      summary: Get cases by rule
+      parameters:
+      - in: query
+        name: assignees
+        schema:
+          type: string
+        description: Filter cases by assignee ID(s).
+      - in: query
+        name: buckets
+        schema:
+          type: string
+        description: Filter cases by bucket ID(s).
+      - in: query
+        name: end_date
+        schema:
+          type: string
+        description: End date to filter cases.
+      - in: query
+        name: is_active
+        schema:
+          type: string
+        description: Filter cases by active status.
+      - in: query
+        name: rules
+        schema:
+          type: string
+        description: Filter cases by rule ID(s).
+      - in: query
+        name: start_date
+        schema:
+          type: string
+        description: Start date to filter cases.
+      - in: query
+        name: statuses
+        schema:
+          type: string
+        description: Filter cases by status(es).
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                description: Case rule data
+          description: Cases grouped by rule retrieved successfully.
+  /api/cases/status:
+    get:
+      operationId: case_status
+      description: Retrieve statistics for cases grouped by status.
+      summary: Get cases by status
+      parameters:
+      - in: query
+        name: assignees
+        schema:
+          type: string
+        description: Filter cases by assignee ID(s).
+      - in: query
+        name: buckets
+        schema:
+          type: string
+        description: Filter cases by bucket ID(s).
+      - in: query
+        name: end_date
+        schema:
+          type: string
+        description: End date to filter cases.
+      - in: query
+        name: is_active
+        schema:
+          type: string
+        description: Filter cases by active status.
+      - in: query
+        name: rules
+        schema:
+          type: string
+        description: Filter cases by rule ID(s).
+      - in: query
+        name: start_date
+        schema:
+          type: string
+        description: Start date to filter cases.
+      - in: query
+        name: statuses
+        schema:
+          type: string
+        description: Filter cases by status(es).
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                description: Status data
+          description: Cases grouped by status retrieved successfully.
+  /api/cases/timeline:
+    get:
+      operationId: case_timeline
+      description: Retrieve a timeline of cases.
+      summary: Get cases timeline
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  description: Case timeline chart data
+          description: Cases timeline retrieved successfully.
+  /api/cases/violations:
+    get:
+      operationId: case_violations
+      summary: Get violations statistics
+      tags:
+      - Case
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                description: Case violations data
+          description: Violations retrieved successfully.
+  /api/currency:
+    get:
+      operationId: currency_list
+      summary: Retrieve a list of currencies
+      parameters:
+      - in: query
+        name: active_indicator
+        schema:
+          type: boolean
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - Currency
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCurrencyList'
+          description: ''
+  /api/currency/{alphabetic_code}:
+    get:
+      operationId: currency_retrieve
+      summary: Retrieve a specific currency
+      parameters:
+      - in: path
+        name: alphabetic_code
+        schema:
+          type: string
+        description: Currency alphabetic code
+        required: true
+      tags:
+      - Currency
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Currency'
+          description: ''
+    patch:
+      operationId: currency_partial_update
+      summary: Activate/Deactivate a currency
+      parameters:
+      - in: path
+        name: alphabetic_code
+        schema:
+          type: string
+        required: true
+      tags:
+      - Currency
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCurrencyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCurrencyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCurrencyRequest'
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Currency'
+          description: ''
+  /api/groups:
+    get:
+      operationId: group_list
+      summary: List groups
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - Group
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?offset=400&limit=100
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?offset=200&limit=100
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      description: Paginated group list
+          description: Successful Response
+    post:
+      operationId: group_create
+      summary: Create group
+      tags:
+      - Group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Group name
+                users:
+                  type: array
+                  items:
+                    type: integer
+                  description: List of user IDs
+                permissions:
+                  type: array
+                  items:
+                    type: integer
+                  description: List of permission IDs
+              required:
+              - name
+              - users
+              - permissions
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                description: Group created successfully
+          description: ''
+  /api/groups/{id}:
+    get:
+      operationId: group_retrieve
+      summary: Retrieve group
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this group.
+        required: true
+      tags:
+      - Group
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Group object
+          description: Successful Response
+    patch:
+      operationId: group_partial_update
+      summary: Update group
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this group.
+        required: true
+      tags:
+      - Group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Group name
+                users:
+                  type: array
+                  items:
+                    type: integer
+                  description: List of user IDs
+                permissions:
+                  type: array
+                  items:
+                    type: integer
+                  description: List of permission IDs
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: Group updated successfully
+          description: ''
+    delete:
+      operationId: group_destroy
+      summary: Delete group
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this group.
+        required: true
+      tags:
+      - Group
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '204':
+          description: Group deleted successfully
+  /api/login:
+    post:
+      operationId: login_create
+      description: Login with email, We use an authentication mechanism that is based
+        on AWS Cognito, So we do not store the password in our database, to validate
+        the user, we will check if the email exists in our database in addition to
+        that the user should be active
+      summary: Login
+      tags:
+      - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+              - email
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+                description: Unspecified response body
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+                description: Unspecified response body
+          description: ''
+  /api/logout:
+    post:
+      operationId: logout_create
+      description: Logout a user by revoking the token from AWS Cognito
+      summary: Logout
+      tags:
+      - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: JWT Token
+              required:
+              - token
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+                description: Unspecified response body
+          description: ''
+  /api/permissions:
+    get:
+      operationId: permission_list
+      summary: List all permissions
+      tags:
+      - Permission
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          resource:
+                            type: string
+                            description: Resource name
+                          actions:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  description: Permission ID
+                                action:
+                                  type: string
+                                  description: Permission action
+                                label:
+                                  type: string
+                                  description: Permission label
+                            description: List of actions allowed on the resource
+          description: Successful Response
+  /api/permissions/{id}:
+    get:
+      operationId: permission_retrieve
+      summary: Retrieve a single permission by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this permission.
+        required: true
+      tags:
+      - Permission
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permission'
+          description: ''
+  /api/risk_assessment:
+    get:
+      operationId: riskassessment_list
+      summary: Retrieve a list of risk assessments
+      parameters:
+      - in: query
+        name: client_subject_id
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: max_date
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: min_date
+        schema:
+          type: string
+          format: date-time
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - Risk Assessment
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRiskAssessmentList'
+          description: ''
+  /api/risk_assessment/{id}:
+    get:
+      operationId: riskassessment_retrieve
+      summary: Retrieve a specific risk assessment
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this risk assessment.
+        required: true
+      tags:
+      - Risk Assessment
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiskAssessment'
+          description: ''
+  /api/rulealert:
+    get:
+      operationId: rulealert_list
+      summary: List all RuleAlert records
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - RuleAlert
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRuleAlertList'
+          description: ''
+  /api/rulealert/{id}:
+    get:
+      operationId: rulealert_retrieve
+      summary: Retrieve a RuleAlert record
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this rule details.
+        required: true
+      tags:
+      - RuleAlert
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleAlert'
+          description: ''
+    patch:
+      operationId: rulealert_partial_update
+      summary: Update a RuleAlert record
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this rule details.
+        required: true
+      tags:
+      - RuleAlert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRuleAlertRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRuleAlertRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRuleAlertRequest'
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleAlert'
+          description: ''
+  /api/ruleinformation:
+    get:
+      operationId: ruledetail_list
+      summary: List all rule information
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - Rule Detail
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRuleDetailList'
+          description: ''
+  /api/ruleinformation/{id}:
+    get:
+      operationId: ruledetail_retrieve
+      summary: Retrieve a rule information
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this rule details.
+        required: true
+      tags:
+      - Rule Detail
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleDetail'
+          description: ''
+    patch:
+      operationId: ruledetail_partial_update
+      summary: Update a rule information record
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this rule details.
+        required: true
+      tags:
+      - Rule Detail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRuleDetailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRuleDetailRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRuleDetailRequest'
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleDetail'
+          description: ''
+  /api/shared/profile-info:
+    get:
+      operationId: shared_profile_info_retrieve
+      summary: Get profile information
+      tags:
+      - Profile Info
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Profile ID.
+          description: ''
+  /api/subjectinfo/{id}:
+    get:
+      operationId: subjectinfo_retrieve
+      summary: Retrieve subject information by client_subject_id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this subject.
+        required: true
+      tags:
+      - Subject Info
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Subject information
+          description: ''
+  /api/subjects:
+    get:
+      operationId: subject_list
+      summary: List all subjects
+      parameters:
+      - in: query
+        name: client_subject_id
+        schema:
+          type: string
+        description: Filter by client subject ID.
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: subject_name
+        schema:
+          type: string
+        description: Filter by subject name.
+      tags:
+      - Subjects
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSubjectList'
+          description: ''
+    post:
+      operationId: subject_create
+      summary: Create a subject
+      tags:
+      - Subjects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubjectRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SubjectRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SubjectRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+          description: ''
+  /api/subjects/{client_subject_id}:
+    get:
+      operationId: subject_retrieve
+      description: Retrieve a specific subject by its client subject ID.
+      summary: Retrieve a specific subject
+      parameters:
+      - in: path
+        name: client_subject_id
+        schema:
+          type: string
+        description: Client subject ID.
+        required: true
+      tags:
+      - Subjects
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+          description: Subject retrieved successfully.
+    patch:
+      operationId: subject_partial_update
+      summary: Update a subject
+      parameters:
+      - in: path
+        name: client_subject_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Subjects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSubjectRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSubjectRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSubjectRequest'
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+          description: ''
+  /api/subjects/{client_subject_id}/generate-subject-report:
+    get:
+      operationId: subject_generate_subject_report
+      parameters:
+      - in: path
+        name: client_subject_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - subjects
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+          description: ''
+  /api/subjects/export_csv:
+    get:
+      operationId: subject_export_csv
+      description: Export subjects to a CSV file.
+      summary: Export subjects to CSV
+      tags:
+      - Subjects
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description: Success message.
+          description: CSV export initiated successfully.
+  /api/subjects/risk_assessment_report:
+    get:
+      operationId: subject_risk_assessment_report
+      description: Retrieve a risk assessment report for all subjects.
+      summary: Get risk assessment report
+      parameters:
+      - in: query
+        name: client_subject_id
+        schema:
+          type: string
+        description: Filter by client subject ID.
+      - in: query
+        name: subject_name
+        schema:
+          type: string
+        description: Filter by subject name.
+      tags:
+      - Subjects
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Paginated risk assessment report
+          description: Risk assessment report retrieved successfully.
+  /api/subjects/upload:
+    post:
+      operationId: subject_upload
+      description: Upload a CSV file to create or update subjects, An email will be
+        sent to you, including upload status.
+      summary: Upload subjects
+      tags:
+      - Subjects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubjectUploadRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SubjectUploadRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SubjectUploadRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+          description: Subjects upload initiated successfully.
+  /api/transactions:
+    get:
+      operationId: transaction_list
+      summary: List all transactions
+      parameters:
+      - in: query
+        name: client_subject_id
+        schema:
+          type: string
+      - in: query
+        name: client_transaction_id
+        schema:
+          type: string
+      - in: query
+        name: country
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: max_date
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: min_date
+        schema:
+          type: string
+          format: date-time
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: transaction_type
+        schema:
+          type: string
+      tags:
+      - Transactions
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTransactionList'
+          description: ''
+    post:
+      operationId: transaction_create
+      summary: Create a transaction
+      tags:
+      - Transactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+          description: ''
+  /api/transactions/{id}:
+    get:
+      operationId: transaction_retrieve
+      description: Override the method to optimise query used, while using only necessary
+        Django/DRF's implementation of [get_object_or_404()]
+      summary: Retrieve a specific transaction
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this transaction.
+        required: true
+      tags:
+      - Transactions
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+          description: ''
+  /api/transactions/countries:
+    get:
+      operationId: transaction_countries
+      description: Retrieve a list of transactions by country.
+      summary: Get Transactions by Country
+      tags:
+      - Transactions
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    country:
+                      type: string
+                      description: Country name.
+                    sum_inflow:
+                      type: number
+                      description: Sum of inflow transactions.
+                    total_inflow:
+                      type: integer
+                      description: Total inflow transactions.
+                    sum_outflow:
+                      type: number
+                      description: Sum of outflow transactions.
+                    total_outflow:
+                      type: integer
+                      description: Total outflow transactions.
+          description: Transactions by country retrieved successfully.
+  /api/transactions/summary:
+    get:
+      operationId: transaction_summary
+      description: Retrieve a summary of transaction statistics.
+      summary: Get Summary Stats
+      tags:
+      - Transactions
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    sum_inflow:
+                      type: number
+                      description: Sum of inflow transactions.
+                    total_inflow:
+                      type: integer
+                      description: Total inflow transactions.
+                    sum_outflow:
+                      type: number
+                      description: Sum of outflow transactions.
+                    total_outflow:
+                      type: integer
+                      description: Total outflow transactions.
+                    month:
+                      type: integer
+                      description: Month of the transaction.
+                    year:
+                      type: integer
+                      description: Year of the transaction.
+          description: Summary stats retrieved successfully.
+  /api/transactions/timeline:
+    get:
+      operationId: transaction_timeline
+      description: Retrieve a timeline of transactions.
+      summary: Get Transactions timeline
+      tags:
+      - Transactions
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    created_date:
+                      type: string
+                      format: date
+                    PAY:
+                      type: integer
+                      description: Number of PAY transactions.
+                    PAY_AMOUNT:
+                      type: number
+                      description: Sum of PAY transactions.
+                    DEPOSIT:
+                      type: integer
+                      description: Number of DEPOSIT transactions.
+                    DEPOSIT_AMOUNT:
+                      type: number
+                      description: Sum of DEPOSIT transactions.
+                    WITHDRAW:
+                      type: integer
+                      description: Number of WITHDRAW transactions.
+                    WITHDRAW_AMOUNT:
+                      type: number
+                      description: Sum of WITHDRAW transactions.
+          description: Transactions timeline retrieved successfully.
+  /api/transactions/upload:
+    post:
+      operationId: transaction_upload
+      description: Upload a CSV file to create or update transactions, An email will
+        be sent to you, including the upload status.
+      summary: Upload transactions
+      tags:
+      - Transactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionUploadRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TransactionUploadRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TransactionUploadRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+          description: Transactions upload initiated successfully.
+  /api/users:
+    get:
+      operationId: user_list
+      summary: List users
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: searchString
+        schema:
+          type: string
+        description: Filter users by name
+      tags:
+      - User
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?offset=400&limit=100
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?offset=200&limit=100
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      description: Paginated user list
+          description: Successful Response
+    post:
+      operationId: user_create
+      summary: Create user
+      tags:
+      - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                groups:
+                  type: array
+                  items:
+                    type: integer
+                permissions:
+                  type: array
+                  items:
+                    type: integer
+              required:
+              - name
+              - email
+              - groups
+              - permissions
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                description: User created successfully
+          description: ''
+  /api/users/{id}:
+    get:
+      operationId: user_retrieve
+      summary: Retrieve user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - User
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: User object
+          description: Successful Response
+    patch:
+      operationId: user_partial_update
+      summary: Update user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                groups:
+                  type: array
+                  items:
+                    type: integer
+                permissions:
+                  type: array
+                  items:
+                    type: integer
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: User updated successfully
+          description: ''
+    delete:
+      operationId: user_destroy
+      description: Logical Deletion a user, When a user is deleted, the user will
+        be marked as inactive, and the user will not be able to log in anymore, all
+        of the user's permissions will be removed, a possible email will be sent to
+        the admin to notify that a user has been deleted
+      summary: Delete user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - User
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  pk:
+                    type: integer
+                  is_active:
+                    type: boolean
+                required:
+                - name
+                - pk
+                - is_active
+          description: ''
+  /api/whitelist:
+    get:
+      operationId: whitelist_list
+      summary: List all Whitelist records
+      parameters:
+      - in: query
+        name: bucket
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: rules
+        schema:
+          type: string
+      - in: query
+        name: subject
+        schema:
+          type: string
+      tags:
+      - Whitelist
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?offset=400&limit=100
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?offset=200&limit=100
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      description: Paginated whitelist list
+          description: Whitelist records
+    post:
+      operationId: whitelist_create
+      summary: Create a Whitelist record
+      tags:
+      - Whitelist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rules:
+                  type: array
+                  items:
+                    type: integer
+                bucket:
+                  type: string
+                subject:
+                  type: string
+              required:
+              - rules
+              - bucket
+              - subject
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhitelistDetail'
+          description: ''
+  /api/whitelist/{id}:
+    get:
+      operationId: whitelist_retrieve
+      summary: Retrieve a Whitelist record
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this whitelist.
+        required: true
+      tags:
+      - Whitelist
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Whitelist'
+          description: ''
+    patch:
+      operationId: whitelist_partial_update
+      summary: Update a Whitelist record
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this whitelist.
+        required: true
+      tags:
+      - Whitelist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rules:
+                  type: array
+                  items:
+                    type: integer
+                bucket:
+                  type: string
+                subject:
+                  type: string
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhitelistDetail'
+          description: ''
+    delete:
+      operationId: whitelist_destroy
+      summary: Delete a Whitelist record
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this whitelist.
+        required: true
+      tags:
+      - Whitelist
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+                description: Unspecified response body
+          description: ''
+  /api/whitelist/{id}/delete:
+    delete:
+      operationId: whitelist_delete
+      description: Allows users to delete a whitelist row using either `pk` (URL)
+        or a combination of `subject` and `bucket` in the request body.
+      summary: Delete a Whitelist record
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this whitelist.
+        required: true
+      tags:
+      - Whitelist
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+                description: Unspecified response body
+          description: ''
+  /health/:
+    get:
+      operationId: health_retrieve
+      summary: Simple health check
+      tags:
+      - Health Check
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: Athena is alive!
+          description: ''
+  /health/test-auth-request:
+    get:
+      operationId: health_test_auth_request_retrieve
+      summary: Simple authentication check
+      tags:
+      - Authentication
+      security:
+      - cookieAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: Request is authenticated!
+          description: ''
+components:
+  schemas:
+    AppConfig:
+      type: object
+      properties:
+        key:
+          type: string
+          readOnly: true
+        value:
+          type: string
+          readOnly: true
+        system_timezone:
+          type: string
+          readOnly: true
+          default: Asia/Singapore
+      required:
+      - key
+      - system_timezone
+      - value
+    Blacklist:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        reference_id:
+          type: string
+        list_name:
+          type: string
+          maxLength: 255
+        created_by:
+          type: integer
+          nullable: true
+        modified_by:
+          type: integer
+          nullable: true
+      required:
+      - id
+      - list_name
+      - name
+    BriefBucket:
+      type: object
+      description: Serializer to allow view of id instead of entire Object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+      required:
+      - id
+      - name
+    BucketRequest:
+      type: object
+      description: |-
+        A ModelSerializer that takes an additional `fields` argument that
+        controls which fields should be displayed.
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        active_indicator:
+          type: boolean
+        description:
+          type: string
+        rule_id:
+          type: integer
+          writeOnly: true
+        rule_setting:
+          type: object
+          additionalProperties: {}
+          writeOnly: true
+        activate_rule:
+          type: boolean
+          writeOnly: true
+      required:
+      - name
+    Case:
+      type: object
+      properties:
+        active_timestamp:
+          type: string
+          format: date-time
+        ageing:
+          type: integer
+          readOnly: true
+        alert_date:
+          type: string
+        alert_risk_rating:
+          type: string
+          readOnly: true
+        approvals:
+          type: array
+          items: {}
+          readOnly: true
+        assignee:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+        available_actions:
+          type: array
+          items: {}
+          readOnly: true
+        bucket:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+        case_action:
+          type: string
+          readOnly: true
+        case_checkers:
+          type: array
+          items: {}
+          readOnly: true
+        case_maker:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+        case_owner:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+        case_status:
+          type: string
+          readOnly: true
+        case_status_order:
+          type: integer
+          default: 2
+        case_subjects:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+        created_by:
+          type: integer
+          nullable: true
+        created_on:
+          type: string
+        documents:
+          type: array
+          items: {}
+          readOnly: true
+        findings:
+          type: array
+          items: {}
+          readOnly: true
+        histories:
+          type: array
+          items: {}
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        last_updated_at:
+          type: string
+        last_updated_by:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+        modified_by:
+          type: integer
+          nullable: true
+        priority:
+          type: integer
+          readOnly: true
+          default: 1
+        reports_code:
+          type: array
+          items: {}
+          readOnly: true
+        reports_indicator:
+          type: array
+          items: {}
+          readOnly: true
+        rule:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+        rule_parameter:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+      required:
+      - active_timestamp
+      - ageing
+      - alert_date
+      - alert_risk_rating
+      - approvals
+      - assignee
+      - available_actions
+      - bucket
+      - case_action
+      - case_checkers
+      - case_maker
+      - case_owner
+      - case_status
+      - case_subjects
+      - created_on
+      - documents
+      - findings
+      - histories
+      - id
+      - last_updated_at
+      - last_updated_by
+      - priority
+      - reports_code
+      - reports_indicator
+      - rule
+      - rule_parameter
+    CaseAgeing:
+      type: object
+      description: Serializer for case ageing data, grouping alerts by priority and
+        ageing buckets.
+      properties:
+        T_0:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        T_1:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        T_2:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        T_3:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        T_4:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        T_5:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        T_plus_5:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+    CaseList:
+      type: object
+      properties:
+        ageing:
+          type: integer
+        priority:
+          type: integer
+        case_status_order:
+          type: integer
+        alert_date:
+          type: string
+        alert_risk_rating:
+          type: string
+        assignee:
+          $ref: '#/components/schemas/CaseListAssignee'
+        bucket:
+          $ref: '#/components/schemas/CaseListBucket'
+        case_action:
+          type: string
+        case_status:
+          type: string
+        case_subjects:
+          $ref: '#/components/schemas/CaseListCaseSubjects'
+        created_on:
+          type: string
+        id:
+          type: integer
+        rule:
+          type: integer
+        active_timestamp:
+          type: string
+          format: date-time
+      required:
+      - active_timestamp
+      - ageing
+      - alert_date
+      - alert_risk_rating
+      - assignee
+      - bucket
+      - case_action
+      - case_status
+      - case_status_order
+      - case_subjects
+      - created_on
+      - id
+      - priority
+      - rule
+    CaseListAssignee:
+      type: object
+      properties:
+        id:
+          type: integer
+          nullable: true
+        name:
+          type: string
+      required:
+      - id
+      - name
+    CaseListBucket:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+      - id
+      - name
+    CaseListCaseSubjectInfor:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        client_subject_id:
+          type: string
+      required:
+      - client_subject_id
+      - id
+      - name
+    CaseListCaseSubjects:
+      type: object
+      properties:
+        subject_1:
+          $ref: '#/components/schemas/CaseListCaseSubjectInfor'
+        subject_2:
+          $ref: '#/components/schemas/CaseListCaseSubjectInfor'
+      required:
+      - subject_1
+    Currency:
+      type: object
+      properties:
+        currency:
+          type: string
+          maxLength: 65
+        alphabetic_code:
+          type: string
+          maxLength: 3
+        numeric_code:
+          type: string
+          maxLength: 3
+        active_indicator:
+          type: boolean
+          readOnly: true
+      required:
+      - active_indicator
+      - alphabetic_code
+      - currency
+    CurrencyRequest:
+      type: object
+      properties:
+        activate_currency:
+          type: boolean
+          writeOnly: true
+        currency:
+          type: string
+          minLength: 1
+          maxLength: 65
+        alphabetic_code:
+          type: string
+          minLength: 1
+          maxLength: 3
+        numeric_code:
+          type: string
+          maxLength: 3
+      required:
+      - activate_currency
+      - alphabetic_code
+      - currency
+    MetabaseUrl:
+      type: object
+      properties:
+        url:
+          type: string
+      required:
+      - url
+    PaginatedBlacklistList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Blacklist'
+    PaginatedCaseListList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseList'
+    PaginatedCurrencyList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Currency'
+    PaginatedRiskAssessmentList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RiskAssessment'
+    PaginatedRuleAlertList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuleAlert'
+    PaginatedRuleDetailList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuleDetail'
+    PaginatedSubjectList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subject'
+    PaginatedTransactionBucketList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionBucket'
+    PaginatedTransactionCaseList:
+      type: object
+      properties:
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionCase'
+    PaginatedTransactionList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+    PaginatedUserListList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserList'
+    PatchedBucketRequest:
+      type: object
+      description: |-
+        A ModelSerializer that takes an additional `fields` argument that
+        controls which fields should be displayed.
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        active_indicator:
+          type: boolean
+        description:
+          type: string
+        rule_id:
+          type: integer
+          writeOnly: true
+        rule_setting:
+          type: object
+          additionalProperties: {}
+          writeOnly: true
+        activate_rule:
+          type: boolean
+          writeOnly: true
+    PatchedCaseApprovalRequest:
+      type: object
+      properties:
+        case_assignee:
+          type: integer
+        case_action:
+          type: string
+          minLength: 1
+        reason_for_escalation:
+          type: object
+          additionalProperties: {}
+    PatchedCaseAssignCheckerRequest:
+      type: object
+      properties:
+        assignee_id:
+          type: integer
+    PatchedCaseReopenDataRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 1000
+    PatchedCaseRequest:
+      type: object
+      properties:
+        active_timestamp:
+          type: string
+          format: date-time
+        alert_date:
+          type: string
+          minLength: 1
+        case_status_order:
+          type: integer
+          default: 2
+        created_by:
+          type: integer
+          nullable: true
+        created_on:
+          type: string
+          minLength: 1
+        last_updated_at:
+          type: string
+          minLength: 1
+        modified_by:
+          type: integer
+          nullable: true
+    PatchedCurrencyRequest:
+      type: object
+      properties:
+        activate_currency:
+          type: boolean
+          writeOnly: true
+        currency:
+          type: string
+          minLength: 1
+          maxLength: 65
+        alphabetic_code:
+          type: string
+          minLength: 1
+          maxLength: 3
+        numeric_code:
+          type: string
+          maxLength: 3
+    PatchedRuleAlertRequest:
+      type: object
+      properties:
+        alert_priority_level:
+          type: string
+          maxLength: 255
+        created_by:
+          type: integer
+          nullable: true
+        modified_by:
+          type: integer
+          nullable: true
+    PatchedRuleDetailRequest:
+      type: object
+      description: |-
+        A ModelSerializer that takes an additional `fields` argument that
+        controls which fields should be displayed.
+      properties:
+        custom_rule_title:
+          type: string
+          maxLength: 512
+        custom_rule_description:
+          type: string
+          maxLength: 1024
+        created_by:
+          type: integer
+          nullable: true
+        modified_by:
+          type: integer
+          nullable: true
+    PatchedSubjectRequest:
+      type: object
+      properties:
+        client_subject_id:
+          type: string
+          minLength: 1
+          maxLength: 255
+        subject_name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        unique_identification_number:
+          type: string
+          maxLength: 255
+        account_holder:
+          type: boolean
+          nullable: true
+        address:
+          type: string
+          maxLength: 255
+        customer_segment:
+          type: string
+          maxLength: 255
+        date_and_place_of_birth:
+          type: string
+          maxLength: 255
+        country_of_birth_or_incorporation:
+          type: string
+          maxLength: 255
+        nationality:
+          type: string
+          maxLength: 60
+        account_type:
+          type: string
+          maxLength: 255
+        account_type_ii:
+          type: string
+          maxLength: 255
+        account_opening_date:
+          type: string
+          maxLength: 255
+        account_opening_date_ii:
+          type: string
+          maxLength: 255
+        customer_aml_risk_rating:
+          type: string
+          maxLength: 255
+        customer_account:
+          type: string
+          maxLength: 255
+        customer_account_ii:
+          type: string
+          maxLength: 255
+        customer_opening_date:
+          type: string
+          maxLength: 255
+        source_of_funds:
+          type: string
+          maxLength: 255
+        average_monthly_income:
+          type: string
+          maxLength: 255
+        cif_status:
+          type: string
+          maxLength: 255
+        occupation:
+          type: string
+          maxLength: 255
+        industry:
+          type: string
+          maxLength: 255
+        purpose_of_account:
+          type: string
+          maxLength: 255
+        contact_number:
+          type: string
+          maxLength: 255
+        email_address:
+          type: string
+          maxLength: 255
+        risk_assessment_score:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        created_by:
+          type: integer
+          nullable: true
+        modified_by:
+          type: integer
+          nullable: true
+    Permission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        action:
+          type: string
+          maxLength: 255
+        resource:
+          type: string
+          maxLength: 255
+      required:
+      - id
+    RiskAssessment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        daily_score:
+          type: number
+          format: double
+          maximum: 1000
+          minimum: -1000
+          exclusiveMaximum: true
+          exclusiveMinimum: true
+        true_hit_date:
+          type: string
+          format: date-time
+        rules_affected:
+          type: array
+          items:
+            type: integer
+        active_timestamp:
+          type: string
+          format: date
+        demerit:
+          type: string
+      required:
+      - active_timestamp
+      - daily_score
+      - demerit
+      - id
+      - rules_affected
+      - true_hit_date
+    RuleAlert:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rule_title:
+          type: string
+          readOnly: true
+        alert_priority_level:
+          type: string
+          maxLength: 255
+        created_by:
+          type: integer
+          nullable: true
+        modified_by:
+          type: integer
+          nullable: true
+      required:
+      - id
+      - rule_title
+    RuleDetail:
+      type: object
+      description: |-
+        A ModelSerializer that takes an additional `fields` argument that
+        controls which fields should be displayed.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rule_title:
+          type: string
+          readOnly: true
+        rule_description:
+          type: string
+          readOnly: true
+        alert_priority_level:
+          type: string
+          readOnly: true
+        custom_rule_title:
+          type: string
+          maxLength: 512
+        custom_rule_description:
+          type: string
+          maxLength: 1024
+        created_by:
+          type: integer
+          nullable: true
+        modified_by:
+          type: integer
+          nullable: true
+      required:
+      - alert_priority_level
+      - id
+      - rule_description
+      - rule_title
+    Subject:
+      type: object
+      properties:
+        client_subject_id:
+          type: string
+          maxLength: 255
+        subject_name:
+          type: string
+          maxLength: 255
+        unique_identification_number:
+          type: string
+          maxLength: 255
+        account_holder:
+          type: boolean
+          nullable: true
+        address:
+          type: string
+          maxLength: 255
+        customer_segment:
+          type: string
+          maxLength: 255
+        date_and_place_of_birth:
+          type: string
+          maxLength: 255
+        country_of_birth_or_incorporation:
+          type: string
+          maxLength: 255
+        nationality:
+          type: string
+          maxLength: 60
+        account_type:
+          type: string
+          maxLength: 255
+        account_type_ii:
+          type: string
+          maxLength: 255
+        account_opening_date:
+          type: string
+          maxLength: 255
+        account_opening_date_ii:
+          type: string
+          maxLength: 255
+        customer_aml_risk_rating:
+          type: string
+          maxLength: 255
+        customer_account:
+          type: string
+          maxLength: 255
+        customer_account_ii:
+          type: string
+          maxLength: 255
+        customer_opening_date:
+          type: string
+          maxLength: 255
+        source_of_funds:
+          type: string
+          maxLength: 255
+        average_monthly_income:
+          type: string
+          maxLength: 255
+        cif_status:
+          type: string
+          maxLength: 255
+        occupation:
+          type: string
+          maxLength: 255
+        industry:
+          type: string
+          maxLength: 255
+        purpose_of_account:
+          type: string
+          maxLength: 255
+        contact_number:
+          type: string
+          maxLength: 255
+        email_address:
+          type: string
+          maxLength: 255
+        risk_assessment_score:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        created_by:
+          type: integer
+          nullable: true
+        modified_by:
+          type: integer
+          nullable: true
+      required:
+      - client_subject_id
+      - subject_name
+    SubjectRequest:
+      type: object
+      properties:
+        client_subject_id:
+          type: string
+          minLength: 1
+          maxLength: 255
+        subject_name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        unique_identification_number:
+          type: string
+          maxLength: 255
+        account_holder:
+          type: boolean
+          nullable: true
+        address:
+          type: string
+          maxLength: 255
+        customer_segment:
+          type: string
+          maxLength: 255
+        date_and_place_of_birth:
+          type: string
+          maxLength: 255
+        country_of_birth_or_incorporation:
+          type: string
+          maxLength: 255
+        nationality:
+          type: string
+          maxLength: 60
+        account_type:
+          type: string
+          maxLength: 255
+        account_type_ii:
+          type: string
+          maxLength: 255
+        account_opening_date:
+          type: string
+          maxLength: 255
+        account_opening_date_ii:
+          type: string
+          maxLength: 255
+        customer_aml_risk_rating:
+          type: string
+          maxLength: 255
+        customer_account:
+          type: string
+          maxLength: 255
+        customer_account_ii:
+          type: string
+          maxLength: 255
+        customer_opening_date:
+          type: string
+          maxLength: 255
+        source_of_funds:
+          type: string
+          maxLength: 255
+        average_monthly_income:
+          type: string
+          maxLength: 255
+        cif_status:
+          type: string
+          maxLength: 255
+        occupation:
+          type: string
+          maxLength: 255
+        industry:
+          type: string
+          maxLength: 255
+        purpose_of_account:
+          type: string
+          maxLength: 255
+        contact_number:
+          type: string
+          maxLength: 255
+        email_address:
+          type: string
+          maxLength: 255
+        risk_assessment_score:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        created_by:
+          type: integer
+          nullable: true
+        modified_by:
+          type: integer
+          nullable: true
+      required:
+      - client_subject_id
+      - subject_name
+    SubjectUploadRequest:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+      required:
+      - file
+    Transaction:
+      type: object
+      description: |-
+        A ModelSerializer that takes an additional `fields` argument that
+        controls which fields should be displayed.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        bucket_loading_status:
+          type: string
+          readOnly: true
+          default: Transaction loaded into [ORDINARY] and requested buckets
+        cp_a:
+          allOf:
+          - $ref: '#/components/schemas/Subject'
+          readOnly: true
+        cp_b:
+          allOf:
+          - $ref: '#/components/schemas/Subject'
+          readOnly: true
+        transaction_currency:
+          allOf:
+          - $ref: '#/components/schemas/Currency'
+          readOnly: true
+        alt_currency:
+          allOf:
+          - $ref: '#/components/schemas/Currency'
+          readOnly: true
+        modified_by:
+          allOf:
+          - $ref: '#/components/schemas/UserSimpleList'
+          readOnly: true
+        created_by:
+          allOf:
+          - $ref: '#/components/schemas/UserSimpleList'
+          readOnly: true
+        client_transaction_id:
+          type: string
+          maxLength: 255
+        transaction_type:
+          type: string
+          maxLength: 255
+        cp_a_country:
+          type: string
+          maxLength: 60
+        cp_b_country:
+          type: string
+          maxLength: 60
+        transaction_timestamp:
+          type: string
+          format: date-time
+        amount:
+          type: number
+          format: double
+        cp_a_bank:
+          type: string
+          maxLength: 255
+        cp_b_bank:
+          type: string
+          maxLength: 255
+        amount_in_alt_currency:
+          type: number
+          format: double
+          nullable: true
+        payment_mode:
+          type: string
+          maxLength: 255
+        purpose_of_transfer:
+          type: string
+          maxLength: 255
+        notes:
+          type: string
+          maxLength: 255
+      required:
+      - alt_currency
+      - amount
+      - bucket_loading_status
+      - client_transaction_id
+      - cp_a
+      - cp_b
+      - created_by
+      - id
+      - modified_by
+      - transaction_currency
+      - transaction_timestamp
+      - transaction_type
+    TransactionBucket:
+      type: object
+      properties:
+        bucket:
+          allOf:
+          - $ref: '#/components/schemas/BriefBucket'
+          readOnly: true
+        client_transaction_id:
+          type: string
+        transaction_type:
+          type: string
+          readOnly: true
+        cp_a:
+          allOf:
+          - $ref: '#/components/schemas/Subject'
+          readOnly: true
+        cp_a_country:
+          type: string
+          readOnly: true
+        cp_a_bank:
+          type: string
+          readOnly: true
+        cp_b:
+          allOf:
+          - $ref: '#/components/schemas/Subject'
+          readOnly: true
+        cp_b_country:
+          type: string
+          readOnly: true
+        cp_b_bank:
+          type: string
+          readOnly: true
+        transaction_timestamp:
+          type: string
+          format: date-time
+          readOnly: true
+        transaction_currency:
+          allOf:
+          - $ref: '#/components/schemas/Currency'
+          readOnly: true
+        amount:
+          type: number
+          format: double
+          readOnly: true
+        alt_currency:
+          allOf:
+          - $ref: '#/components/schemas/Currency'
+          readOnly: true
+        amount_in_alt_currency:
+          type: number
+          format: double
+          readOnly: true
+        payment_mode:
+          type: string
+          readOnly: true
+        purpose_of_transfer:
+          type: string
+          readOnly: true
+        notes:
+          type: string
+          readOnly: true
+        created_by:
+          type: integer
+          nullable: true
+        modified_by:
+          type: integer
+          nullable: true
+      required:
+      - alt_currency
+      - amount
+      - amount_in_alt_currency
+      - bucket
+      - client_transaction_id
+      - cp_a
+      - cp_a_bank
+      - cp_a_country
+      - cp_b
+      - cp_b_bank
+      - cp_b_country
+      - notes
+      - payment_mode
+      - purpose_of_transfer
+      - transaction_currency
+      - transaction_timestamp
+      - transaction_type
+    TransactionCase:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        alt_currency:
+          allOf:
+          - $ref: '#/components/schemas/TransactionCaseCurrency'
+          readOnly: true
+        amount:
+          type: number
+          format: double
+          readOnly: true
+        amount_in_alt_currency:
+          type: number
+          format: double
+          readOnly: true
+        client_transaction_id:
+          type: string
+        cp_a:
+          allOf:
+          - $ref: '#/components/schemas/TransactionCaseSubject'
+          readOnly: true
+        cp_a_bank:
+          type: string
+          readOnly: true
+        cp_a_country:
+          type: string
+          readOnly: true
+        cp_b:
+          allOf:
+          - $ref: '#/components/schemas/TransactionCaseSubject'
+          readOnly: true
+        cp_b_bank:
+          type: string
+          readOnly: true
+        cp_b_country:
+          type: string
+          readOnly: true
+        payment_mode:
+          type: string
+          readOnly: true
+        purpose_of_transfer:
+          type: string
+          readOnly: true
+        transaction_currency:
+          allOf:
+          - $ref: '#/components/schemas/TransactionCaseCurrency'
+          readOnly: true
+        transaction_timestamp:
+          type: string
+          format: date-time
+          readOnly: true
+        transaction_type:
+          type: string
+          readOnly: true
+      required:
+      - alt_currency
+      - amount
+      - amount_in_alt_currency
+      - client_transaction_id
+      - cp_a
+      - cp_a_bank
+      - cp_a_country
+      - cp_b
+      - cp_b_bank
+      - cp_b_country
+      - id
+      - payment_mode
+      - purpose_of_transfer
+      - transaction_currency
+      - transaction_timestamp
+      - transaction_type
+    TransactionCaseCurrency:
+      type: object
+      properties:
+        alphabetic_code:
+          type: string
+          readOnly: true
+      required:
+      - alphabetic_code
+    TransactionCaseSubject:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_on:
+          type: string
+          format: date-time
+          readOnly: true
+        client_subject_id:
+          type: string
+          maxLength: 255
+        subject_name:
+          type: string
+          maxLength: 255
+        unique_identification_number:
+          type: string
+          maxLength: 255
+        account_holder:
+          type: boolean
+          nullable: true
+        address:
+          type: string
+          maxLength: 255
+        customer_segment:
+          type: string
+          maxLength: 255
+        date_and_place_of_birth:
+          type: string
+          maxLength: 255
+        country_of_birth_or_incorporation:
+          type: string
+          maxLength: 255
+        nationality:
+          type: string
+          maxLength: 60
+        account_type:
+          type: string
+          maxLength: 255
+        account_type_ii:
+          type: string
+          maxLength: 255
+        account_opening_date:
+          type: string
+          maxLength: 255
+        account_opening_date_ii:
+          type: string
+          maxLength: 255
+        customer_aml_risk_rating:
+          type: string
+          maxLength: 255
+        customer_account:
+          type: string
+          maxLength: 255
+        customer_account_ii:
+          type: string
+          maxLength: 255
+        customer_opening_date:
+          type: string
+          maxLength: 255
+        source_of_funds:
+          type: string
+          maxLength: 255
+        average_monthly_income:
+          type: string
+          maxLength: 255
+        cif_status:
+          type: string
+          maxLength: 255
+        occupation:
+          type: string
+          maxLength: 255
+        industry:
+          type: string
+          maxLength: 255
+        purpose_of_account:
+          type: string
+          maxLength: 255
+        contact_number:
+          type: string
+          maxLength: 255
+        email_address:
+          type: string
+          maxLength: 255
+        risk_assessment_score:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        created_by:
+          type: integer
+          nullable: true
+        modified_by:
+          type: integer
+          nullable: true
+      required:
+      - client_subject_id
+      - created_on
+      - id
+      - modified_on
+      - subject_name
+    TransactionRequest:
+      type: object
+      description: |-
+        A ModelSerializer that takes an additional `fields` argument that
+        controls which fields should be displayed.
+      properties:
+        populate_buckets:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          writeOnly: true
+          default: []
+        cp_a_id:
+          type: string
+          writeOnly: true
+          minLength: 1
+        cp_b_id:
+          type: string
+          writeOnly: true
+          minLength: 1
+        transaction_currency_id:
+          type: string
+          writeOnly: true
+          minLength: 1
+        alt_currency_id:
+          type: string
+          writeOnly: true
+          minLength: 1
+        client_transaction_id:
+          type: string
+          minLength: 1
+          maxLength: 255
+        transaction_type:
+          type: string
+          minLength: 1
+          maxLength: 255
+        cp_a_country:
+          type: string
+          maxLength: 60
+        cp_b_country:
+          type: string
+          maxLength: 60
+        transaction_timestamp:
+          type: string
+          format: date-time
+        amount:
+          type: number
+          format: double
+        cp_a_bank:
+          type: string
+          maxLength: 255
+        cp_b_bank:
+          type: string
+          maxLength: 255
+        amount_in_alt_currency:
+          type: number
+          format: double
+          nullable: true
+        payment_mode:
+          type: string
+          maxLength: 255
+        purpose_of_transfer:
+          type: string
+          maxLength: 255
+        notes:
+          type: string
+          maxLength: 255
+      required:
+      - amount
+      - client_transaction_id
+      - transaction_currency_id
+      - transaction_timestamp
+      - transaction_type
+    TransactionUploadRequest:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+      required:
+      - file
+    UserList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+          nullable: true
+        email:
+          type: string
+          readOnly: true
+      required:
+      - email
+      - id
+      - name
+    UserSimpleList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+      required:
+      - id
+    Whitelist:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rules:
+          type: array
+          items:
+            type: integer
+            maximum: 2147483647
+            minimum: -2147483648
+        created_by:
+          type: integer
+          nullable: true
+        modified_by:
+          type: integer
+          nullable: true
+        subject:
+          type: integer
+        bucket:
+          type: integer
+      required:
+      - bucket
+      - id
+      - rules
+      - subject
+    WhitelistDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        subject:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+        rules:
+          type: array
+          items:
+            type: integer
+            maximum: 2147483647
+            minimum: -2147483648
+        created_by:
+          type: integer
+          nullable: true
+        modified_by:
+          type: integer
+          nullable: true
+        bucket:
+          type: integer
+      required:
+      - bucket
+      - id
+      - rules
+      - subject
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+servers:
+- url: http://localhost/api
+  description: Local development server
