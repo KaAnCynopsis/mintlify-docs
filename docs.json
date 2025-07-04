@@ -217,6 +217,23 @@
             "pages": ["api-reference/authentication/simple-authentication-check"]
           }
         ]
+      },
+      {
+        "tab": "API Custom Athena",
+        "groups": [
+          {
+            "group": "API Documentation",
+            "pages": [
+              "athena-api-reference/introduction"
+            ]
+          },
+          {
+            "group": "Endpoint",
+            "openapi": {
+              "source": "athena-api-reference/athena_openapi.json"
+            }
+          }
+        ]
       }
     ]
   },

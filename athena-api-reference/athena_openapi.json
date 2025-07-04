@@ -16,7 +16,7 @@ info:
   contact:
     email: tech@cynopsis.co
 paths:
-  /api/ageing:
+  /api/ageing: 
     get:
       operationId: caseageing_list
       description: Retrieve case ageing distribution across all cases.
