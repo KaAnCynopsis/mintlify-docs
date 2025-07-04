@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
-  title: Athena API
+  title: Artemis ( actual Athena API)
   version: v3
-  description: "ATHENA is an advanced real-time transaction monitoring solution designed\
+  description: "(artemis test) ATHENA is an advanced real-time transaction monitoring solution designed\
     \ to detect and prevent money laundering, fraud, and terrorism financing. Powered\
     \ by proprietary AML rules, ATHENA analyzes transactions in real time, providing\
     \ clear, intuitive visual insights to streamline compliance processes.\n    \n\
@@ -16,49 +16,7 @@ info:
   contact:
     email: tech@cynopsis.co
 paths:
-  /api/ageing: 
-    get:
-      operationId: caseageing_list
-      description: Retrieve case ageing distribution across all cases.
-      summary: List case ageing distribution
-      tags:
-      - Ageing
-      security:
-      - cookieAuth: []
-      - BearerAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CaseAgeing'
-          description: ''
-  /api/ageing/{id}:
-    get:
-      operationId: caseageing_retrieve
-      description: Fetch ageing distribution of cases assigned to a specific user.
-      summary: Retrieve case ageing data for a specific user
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: User ID
-        required: true
-      tags:
-      - Ageing
-      security:
-      - cookieAuth: []
-      - BearerAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CaseAgeing'
-          description: ''
+  
   /api/appconfig/{key}:
     get:
       operationId: appconfig_retrieve
