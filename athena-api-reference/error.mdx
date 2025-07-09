@@ -1,0 +1,16 @@
+---
+title: 'Error Codes'
+---
+
+This show the common error codes 
+
+
+
+| Status Code | Category              | Sample HTTP Response                                                                                          | Description                                                                                                         |
+| ----------- | --------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| 400         | Bad Request           | `json<br>{<br>  "list_name": "Subject must be registered either under [HIGH RISK] or [RESTRICTED] list"<br>}` | - Validation Error. User passed wrong input request parameters.<br>- Transaction not uploaded as input was invalid. |
+| 401         | Unauthorized          | `json<br>{<br>  "detail": "Custom bearer token is not valid"<br>}`                                            | - Authorization Token is invalid<br>- Token expired; needs new token.                                               |
+| 403         | Forbidden             | `json<br>{<br>  "detail": "Authentication credentials were not provided."<br>}`                               | - Authorization Token is invalid<br>- Token not provided; user must provide token.                                  |
+| 404         | Not Found             | `json<br>{<br>  "detail": "Not found."<br>}`                                                                  | - Identifier does not have a resource<br>- No such case/transaction/subject to retrieve.                            |
+| 405         | Method Not Allowed    | `json<br>{<br>  "detail": "Method \"DELETE\" not allowed."<br>}`                                              | - Method is not supported                                                                                           |
+| 500         | Internal Server Error | `json<br>{<br>  "detail": "Unexpected Error."<br>}`                                                           | - Uncaught exceptions                                                                                               |

@@ -1,0 +1,196 @@
+---
+title: 'Authentication'
+description: 'Setting up Athena authenication access'
+---
+
+
+
+<Info>
+  **Prerequisite**: In order to run the collection below, 
+  a <b>host</b> url is required which will be provided by Cynopsis, which can then be set as a global variable 
+  or in the enviroment created for Athena in the Introduction section.
+</Info>
+
+[Postman Authentication Service Collection](https://developer.cynopsis.co/assets/postman-collections/athena3-auth.json)
+
+Health Check of the Authentication API Service
+
+
+```bash
+GET {{host}}/auth/healthCheck
+```
+
+Sample HTTP Response
+
+```bash
+Expected Response Code: 200
+Response Body:
+e.g.
+
+{
+    "description": "the service is healthy"
+}
+```
+## Get Access Token by Username
+
+To generate a token, please make an api-call to the following api.
+
+```bash
+POST {{host}}/auth/get-access-token-by-username
+```
+
+## Requirements
+
+For the credentials require below, Cynopsis will advice. <br/>
+
+- username
+- password
+- user_pool_id
+- client_id
+
+<br/>
+Sample HTTP Request
+
+
+```bash
+HTTP Method: POST
+URL: {{host}}/auth/get-access-token-by-username
+Request Body:
+e.g.
+
+{
+    "username": "username@mycredentials.com",
+    "password": "Th15Is@P4S5W0rd!",
+    "user_pool_id": "Cynopsis to advise",
+    "client_id": "Cynopsis to advise"
+}
+```
+Sample HTTP Response
+
+```bash
+Expected Response Code: 200
+Response Body:
+e.g.
+
+{
+    "token": "Token will be here.",
+    "id_token": "Id of token will be here."
+}
+```
+
+### Get Refresh Token
+
+```bash
+POST {{host}}/auth/get-refresh-token
+```
+
+Sample HTTP Request<br />
+Same requirements as the <b>Get Access Token by Username</b> Endpoint
+
+```bash
+HTTP Method: POST
+URL: {{host}}/auth/get-access-token-by-username
+Request Body:
+e.g.
+
+{
+    "username": "username@mycredentials.com",
+    "password": "Th15Is@P4S5W0rd!",
+    "user_pool_id": "Cynopsis to advise",
+    "client_id": "Cynopsis to advise"
+}
+```
+
+Sample HTTP Response
+
+
+```bash
+Expected Response Code: 200
+Response Body:
+e.g.
+
+{
+    "refresh_token": "Token will be here.",
+    "id_token": "Id of token will be here."
+}
+```
+
+
+### Get Access Token by Refresh Token
+Sample HTTP Request<br /><br />
+Make an API call to the above API and then use that refresh_token in this API along with the client_id.
+
+
+```bash
+HTTP Method: POST
+URL: {{host}}/auth/get-access-token-by-refresh-token
+Request Body:
+e.g.
+
+{
+    "refresh_token": "Refresh token will be required here.",
+    "client_id": "Cynopsis To Advise"
+}
+```
+
+Sample HTTP Response
+
+```bash
+Expected Response Code: 200
+Response Body:
+e.g.
+
+{
+    "refresh_token": "Token will be here.",
+    "id_token": "Id of token will be here."
+}
+```
+
+
+To authenticate a token make an API call to the following API.
+
+```bash
+POST {{host}}/auth/authenticate-token
+```
+
+Sample HTTP Request
+
+
+```bash
+HTTP Method: POST
+URL: {{host}}/auth/authenticate-token
+Request Body:
+e.g.
+
+{
+    "token": "Token to be authenticated.",
+    "pool_url": "Cynopsis to advise",
+    "client_id": "Cynopsis to advise"
+}
+```
+
+Sample HTTP Response <br /><br />
+For security reasons the properties of the response body have been set to an empty string.
+
+```bash
+Expected Response Code: 200
+Response Body:
+e.g.
+
+{
+    "origin_jti": "",
+    "sub": "",
+    "event_id": "",
+    "token_use": "",
+    "scope": "",
+    "auth_time": "",
+    "iss": "",
+    "exp": "",
+    "iat": "",
+    "jti": "",
+    "client_id": "",
+    "username": ""
+}
+```
+
+

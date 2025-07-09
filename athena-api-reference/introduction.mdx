@@ -3,31 +3,34 @@ title: ' Athena Introduction'
 description: 'Example section for showcasing API endpoints'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
 
-## Welcome
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+ATHENA is an advanced real-time transaction monitoring solution designed to detect and prevent money laundering, fraud, and terrorism financing. Powered by proprietary AML rules, ATHENA analyzes transactions in real time, providing clear, intuitive visual insights to streamline compliance processes.
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+✅ Real-Time Monitoring – Instantly analyzes transaction data to detect anomalies and potential compliance risks.<br />
+✅ Visualized Insights – Converts complex data into easy-to-understand charts, aiding faster decision-making.<br />
+✅ Seamless Integration – Easily integrates with existing financial and compliance systems.<br />
 
-## Authentication
+Ideal for financial institutions, fintech companies, and regulated businesses, ATHENA enhances risk management and ensures regulatory compliance with ease.
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+## Introduction
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+This documentation serves as a reference and guide for Athena 3.0 client API users to be familiar with the relevant workflow and APIs. The left panel displays the list of workflow phases and within it, there will be a sublist of information displaying the APIs involved and the expected behaviour.<br /><br />
+Please refer to the following Postman Collection for the use of the Athena APIs. Before using the API, please proceed to the Authentication section to get an idea on how to setup a token.<br /><br />
+In order to test the collection, you should create an environment for Athena and add <b>base_url</b> and <b>bearer_token</b> as variables or add as global variables. For the <b>bearer_token</b> refer to Authentication while the <b>base_url</b> will be provided by Cynopsis.<br /><br />
+
+<Frame>
+  <img src="../images/athena-postman-variables.png" style={{ borderRadius: '0.5rem' }} />
+</Frame>
+
+[Athena Postman Collection Link](https://developer.cynopsis.co/assets/postman-collections/athena3-external.json)
+
+## Requirements
+
+<b>Athena3 API Endpoint(URL)</b>:This will be provided by Cynopsis <br /><br />
+<b>Authentication</b>: We are using Bearer token, please generate the access_token base on Authentication section<br /><br />
+<b>API Headers</b>: We are using content-type <b>application/json</b> for all of our APIs.<br /><br />
+
+
+Copyright © 2019 Cynopsis Solutions Pte. Ltd.
+All content in this website, including images, api documentation are the property of Cynopsis Solutions Pte Ltd. Any unauthorised disclosure, dissemination, distribution, copying or re-producing any aspect of this document or the creation of derivative of such content is prohibited. It is intended only for reference and use of the intended recipient(s). All rights reserved.

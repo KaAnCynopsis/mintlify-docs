@@ -1,0 +1,43 @@
+---
+title: ' Athena Introduction'
+description: 'Example section for showcasing API endpoints'
+---
+
+<Note>
+  If you're not looking to build API reference documentation, you can delete
+  this section by removing the api-reference folder.
+</Note>
+
+
+ATHENA is an advanced real-time transaction monitoring solution designed to detect and prevent money laundering, fraud, and terrorism financing. Powered by proprietary AML rules, ATHENA analyzes transactions in real time, providing clear, intuitive visual insights to streamline compliance processes.
+
+✅ Real-Time Monitoring – Instantly analyzes transaction data to detect anomalies and potential compliance risks.
+✅ Visualized Insights – Converts complex data into easy-to-understand charts, aiding faster decision-making.
+✅ Seamless Integration – Easily integrates with existing financial and compliance systems.
+
+Ideal for financial institutions, fintech companies, and regulated businesses, ATHENA enhances risk management and ensures regulatory compliance with ease.
+
+
+## Welcome
+
+There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+
+<Card
+  title="Plant Store Endpoints"
+  icon="leaf"
+  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
+>
+  View the OpenAPI specification file
+</Card>
+
+## Authentication
+
+All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+
+```json
+"security": [
+  {
+    "bearerAuth": []
+  }
+]
+```
